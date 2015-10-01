@@ -1,0 +1,22 @@
+.transport {
+  	display: inline-block;
+	height: 3em;
+	width: 36em;
+	background-color: black;
+}
+
+.transport > .past {
+	height: 0.5em;
+	background-color: red;
+}
+
+.transport > .step {
+  	display: inline-block;
+	height: 2em;
+	background-color: blue;
+}
+
+#main {
+	width: 100%;
+  	text-align: center;
+}

@@ -1,0 +1,43 @@
+<html>
+
+<head>
+	<script type="text/javascript" src="node_modules/tone/build/Tone.js"></script>
+	<script type="text/javascript" src="lodash.js"></script>
+	<script type="text/javascript" src="index.js"></script>
+	<link rel="stylesheet" type="text/css" href="index.css" />
+</head>
+
+<body>
+
+	<div id="main">
+
+		<br><br><br>
+
+		<div class="transport" id="t1">
+			<div class="past"></div>
+			<div class="present"></div>
+			<div class="future"></div>
+			<div class="step"></div>
+		</div>
+
+
+	</div>
+</body>
+
+<script type="text/javascript">
+
+	var sampler = new Tone.Sampler({
+		"C2": "./resources/sounds/kick_1.wav"
+	}).toMaster();
+
+	var t1 = document.querySelector('#t1');
+
+	new Clip(sampler, 32, 4).attachView(new ClipView(t1));
+
+	Tone.Buffer.onload = function(){
+		Tone.Transport.start();
+	};
+
+</script>
+
+</html>

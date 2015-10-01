@@ -1,0 +1,26 @@
+{
+  "name": "bambam",
+  "version": "0.0.0",
+  "description": "Bam Bam",
+  "main": "index.js",
+  "scripts": {
+    "start": "open http://localhost:8080 && static -p 8080 .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tchakabam/bambam"
+  },
+  "author": "Stephan Hesse <tchakabam@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tchakabam/bambam/issues"
+  },
+  "homepage": "https://github.com/tchakabam/bambam",
+  "dependencies": {
+    "tone": "^0.5.1"
+  },
+  "devDependencies": {
+    "node-static": "^0.7.7"
+  }
+}
