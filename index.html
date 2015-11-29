@@ -1,7 +1,9 @@
-<html>
+<html ng-app>
 
 <head>
+	<script type="text/javascript" src="node_modules/angular/angular.js"></script>
 	<script type="text/javascript" src="node_modules/tone/build/Tone.js"></script>
+	<script type="text/javascript" src="node_modules/wavesurfer.js/dist/wavesurfer.min.js"></script>
 	<script type="text/javascript" src="lodash.js"></script>
 	<script type="text/javascript" src="index.js"></script>
 	<link rel="stylesheet" type="text/css" href="index.css" />
@@ -11,32 +13,161 @@
 
 	<div id="main">
 
-		<br><br><br>
+		<h1>BAMBAM</h1>
 
-		<div class="transport" id="t1">
-			<div class="past"></div>
-			<div class="present"></div>
-			<div class="future"></div>
-			<div class="step"></div>
+		<div>
+			<span id="globalPlay" class="transportLabel">&nbsp;&#x25b6;&nbsp;</span>
+			<br><br>
 		</div>
 
+		<div>
+			<span id="globalBPM" class="transportLabel">{{globalBPM}} bpm&nbsp;</span>
+			<input id="globalBPMRange" ng-model="globalBPM" class="globalRange" type="range" min="60" max="200" value="120"></input>
+		</div>
+
+		<div>
+			<span id="globalLoop" class="transportLabel">&nbsp;32_&nbsp;</span>
+			<input id="globalLoopRange" class="globalRange" type="range" min="0" max="32" value="32"></input>
+		</div>
+
+		<div id="transports">
+
+			<span class="transportLabel" id="label0"><br>___&nbsp;</span>
+
+			<div class="transport" id="t0">
+				<div class="past"></div>
+				<div class="present"></div>
+				<div class="future"></div>
+				<div class="step"></div>
+			</div>
+
+		</div>
+
+		<span class="transportLabel" id="label0"><br>&nbsp;SET&nbsp;</span>
+
+		<textarea id="samplerConfig" rows="10" >
+{
+  "C2": "./resources/sounds/kick_1.wav",
+  "C#2": "./resources/sounds/hihat_closed_1.wav",
+  "D2": "./resources/sounds/hi_snare_2.wav",
+  "D#2": "./resources/sounds/snare_tape_1.wav"
+}
+		</textarea>
+
+
+		<div id="waveform"></div>
 
 	</div>
+
 </body>
 
 <script type="text/javascript">
 
-	var sampler = new Tone.Sampler({
-		"C2": "./resources/sounds/kick_1.wav"
-	}).toMaster();
+	var main;
+	var sampler;
 
-	var t1 = document.querySelector('#t1');
+	var samplerConfigElem = q('#samplerConfig');
+	var samplerConfig = JSON.parse(samplerConfigElem.innerHTML);
 
-	new Clip(sampler, 32, 4).attachView(new ClipView(t1));
-
-	Tone.Buffer.onload = function(){
+	var globalPlaying = false;
+	var globalPlay = q('#globalPlay');
+	globalPlay.onclick = function() {
+		if (globalPlaying) {
+			globalPlaying = false;
+			Tone.Transport.stop();
+			return;
+		}
+		globalPlaying = true;
 		Tone.Transport.start();
 	};
+
+	function init() {
+
+		Tone.Buffer.onload = function(){
+			// TODO: ...
+		};
+
+		Tone.Transport.loop = true;
+		Tone.Transport.swing = 0.5;
+		Tone.Transport.timeSignature = 2;
+		Tone.Transport.setLoopPoints(0, "1m");
+
+		sampler = new Tone.Sampler(samplerConfig).toMaster();
+
+		main = new Main(sampler).attachView(new MainView(q('#main')));
+		main.transports.forEach(function(transport) {
+
+			transport.onselected = function() {
+				wavesurfer.load(samplerConfig[this.clip.param]);
+			}.bind(transport);
+
+		});
+
+		loadDemo();
+	}
+
+	function reloadSamples() {
+		Tone.Transport.stop();
+		Tone.Buffer.onload = function(){
+			Tone.Transport.start();
+		}
+		var samplerConfig = JSON.parse(samplerConfigElem.innerHTML);
+		main.transports.forEach(function(transport) {
+			transport.clip.component = new Tone.Sampler(samplerConfig).toMaster();
+		});
+
+	}
+
+	var globalLoopRange = q('#globalLoopRange');
+	var globalLoop = q('#globalLoop');
+
+	function onGlobalLoopRangeChange() {
+		globalLoop.innerHTML = '&nbsp;' + globalLoopRange.value + '_&nbsp;';
+		main.setGlobalLoop(globalLoopRange.value);
+	}
+
+	globalLoopRange.onchange = onGlobalLoopRangeChange;
+	globalLoopRange.onmousemove = onGlobalLoopRangeChange;
+
+	var globalBPMRange = q('#globalBPMRange');
+	var globalBPM = q('#globalBPM');
+
+	function onGlobalBPMRangeChange() {
+		var bpm = Math.round(globalBPMRange.value);
+		Tone.Transport.bpm.rampTo(bpm, 1);
+	}
+
+	globalBPMRange.onchange = onGlobalBPMRangeChange;
+	globalBPMRange.onmousemove = onGlobalBPMRangeChange;
+
+	var wavesurfer = Object.create(WaveSurfer);
+	wavesurfer.init({
+	    container: '#waveform',
+	    waveColor: 'violet',
+	    progressColor: 'purple'
+	});
+
+	function loadDemo() {
+
+		globalLoopRange.value = 16;
+
+		main.setGlobalLoop(globalLoopRange.value);
+
+		var kick = main.transports[0].clip;
+
+		kick.load(0, 4, 8, 12);
+
+		var hh = main.transports[1].clip;
+
+		hh.load(2, 6, 10, 13, 14, 15);
+
+		var snare = main.transports[2].clip;
+
+		snare.load(4, 7, 12);
+
+	}
+
+	init();
 
 </script>
 

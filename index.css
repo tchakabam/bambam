@@ -1,22 +1,82 @@
 .transport {
   	display: inline-block;
 	height: 3em;
-	width: 36em;
-	background-color: black;
+	width: 56em;
+	background-color: #62CB6D;
 }
 
 .transport > .past {
 	height: 0.5em;
-	background-color: red;
+	background-color: C34B4B;
 }
 
 .transport > .step {
   	display: inline-block;
 	height: 2em;
-	background-color: blue;
+	background-color: #BBB93E;
+	padding: 1px;
+	border: solid 1px white;
+}
+
+.transport > .step:hover {
+	cursor: pointer;
+}
+
+.transport > .step.selected {
+	background-color: #C3754B;
+	border: solid 1px white;
+}
+
+.transportLabel {
+	color: #C34B4B;
+	font-weight: bolder;
+	vertical-align: super;
+	background-color: #47C2B6;
+	padding-right: 1em;
+    padding-top: 1em;
+    padding-bottom: 0.4em;
+    margin-right: 0.2em;
+}
+
+.transportLabel:hover {
+	cursor: pointer;
+}
+
+.transportLabel.selected {
+	border: solid 2px white;
 }
 
 #main {
-	width: 100%;
+	color: white;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #225767;
+	width: 64em;
   	text-align: center;
+  	padding-bottom: 1em;
+}
+
+#main h1 {
+	padding-top: 1em;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+#main #samplerConfig {
+	font-size: 1em;
+	font-family: Helvetica;
+	margin-top: 1em;
+	width: 56em;
+}
+
+#main .globalRange {
+	font-size: 1em;
+	width: 56em;
+	margin-bottom: 2em;
+}
+
+body {
+	font-size: 1em;
+	font-family: Helvetica;
+	background-color: black;
 }
