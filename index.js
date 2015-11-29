@@ -1,5 +1,3 @@
-Tone.Transport.bpm.value = 120;
-
 function q(e, hash) {
 	if (!hash) {
 		hash = e;
@@ -47,7 +45,7 @@ function Clip(component, length, beatFractionsPerStep, param) {
 
 	Tone.Transport.setInterval(function(time) {
 
-		console.log(param + ' > ' + time);
+		//console.log(param + ' > ' + time);
 
 		this.step++;
 		if (this.step > this.loop) {
